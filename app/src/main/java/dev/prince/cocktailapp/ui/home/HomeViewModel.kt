@@ -16,18 +16,14 @@ class HomeViewModel @Inject constructor(
     private val api: ApiService
 ) : ViewModel() {
 
-    init {
-        searchCocktails("Mojito")
-    }
+    private val _cockTails = MutableStateFlow<List<CockTail>>(emptyList())
+    val cockTails: StateFlow<List<CockTail>> = _cockTails
 
-    private val _cocktails = MutableStateFlow<List<CockTail>>(emptyList())
-    val cocktails: StateFlow<List<CockTail>> = _cocktails
-
-    fun searchCocktails(query: String) {
+    fun searchCocktails(cockTailName: String) {
         viewModelScope.launch {
             try {
-                val response = api.getCocktailByName(query)
-                _cocktails.emit(response.drinks)
+                val response = api.getCocktailByName(cockTailName.trim())
+                _cockTails.emit(response.drinks)
                 //Log.d("api-data","response = $response + $cocktails _cocktails = $_cocktails")
             } catch (e: Exception) {
                 e.printStackTrace()

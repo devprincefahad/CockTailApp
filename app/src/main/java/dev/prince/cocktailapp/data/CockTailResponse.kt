@@ -16,6 +16,8 @@ data class CockTail(
     val name: String,
     @SerializedName("strInstructions")
     val description: String,
+    @SerializedName("strCategory")
+    val category: String,
     @SerializedName("strAlcoholic")
     val hasAlcohol: String = "Non_Alcoholic"
 )
