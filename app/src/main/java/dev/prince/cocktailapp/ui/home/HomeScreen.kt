@@ -75,8 +75,10 @@ fun HomeScreen(
         SearchBar(
             value = search,
             onValueChange = {
-                search = it
-                viewModel.searchDrinks(it)
+                if (it.length <= 30) {
+                    search = it
+                    viewModel.searchDrinks(it)
+                }
             }
         )
 
