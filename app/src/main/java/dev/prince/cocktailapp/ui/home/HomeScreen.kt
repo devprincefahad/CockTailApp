@@ -7,11 +7,14 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -55,6 +58,7 @@ fun HomeScreen(
         modifier = Modifier
             .background(Color.White)
             .padding(16.dp)
+            .verticalScroll(rememberScrollState())
     ) {
 
         Text(
@@ -112,16 +116,20 @@ fun HomeScreen(
                         modifier = Modifier
                             .padding(top = 32.dp)
                             .size(28.dp)
-                        .align(Alignment.CenterHorizontally))
+                            .align(Alignment.CenterHorizontally)
+                    )
                 }
+
                 is Resource.Success -> {
                     val drinks = (resource as Resource.Success<List<Drink>>).data
                     if (drinks != null && drinks.isNotEmpty()) {
                         LazyVerticalGrid(
                             columns = GridCells.Fixed(count = 2),
                             modifier = Modifier
+                                .height(2800.dp)
                                 .fillMaxSize()
                                 .padding(top = 16.dp),
+                            userScrollEnabled = false
                         ) {
                             items(drinks) { cocktail ->
                                 CockTailItem(
@@ -145,8 +153,9 @@ fun HomeScreen(
                         )
                     }
                 }
+
                 is Resource.Error -> {
-                    Log.d("error-home","Error: ${(resource as Resource.Error).message}")
+                    Log.d("error-home", "Error: ${(resource as Resource.Error).message}")
                 }
             }
         }
