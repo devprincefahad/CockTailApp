@@ -7,9 +7,11 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -29,9 +31,11 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.annotation.RootNavGraph
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
-import dev.prince.cocktailapp.ui.CockTailItem
-import dev.prince.cocktailapp.ui.RestaurantCard
-import dev.prince.cocktailapp.ui.SearchBar
+import dev.prince.cocktailapp.data.Drink
+import dev.prince.cocktailapp.ui.composables.CockTailItem
+import dev.prince.cocktailapp.ui.composables.RestaurantCard
+import dev.prince.cocktailapp.ui.composables.SearchBar
+import dev.prince.cocktailapp.util.Resource
 
 @Composable
 @RootNavGraph(start = true)
@@ -41,7 +45,8 @@ fun HomeScreen(
     viewModel: HomeViewModel = hiltViewModel()
 ) {
 
-    val data by viewModel.drinks.collectAsState(initial = emptyList())
+    val resource by viewModel.drinks.collectAsState(initial = Resource.Loading)
+
     var search by remember { mutableStateOf("") }
 
     Column(
@@ -96,16 +101,44 @@ fun HomeScreen(
         RestaurantCard()
 
         if (search.isNotBlank()) {
-            LazyVerticalGrid(
-                columns = GridCells.Fixed(count = 2),
-                modifier = Modifier
-                    .fillMaxSize(),
-//                userScrollEnabled = false
-            ) {
-                items(data) { cocktail ->
-                    CockTailItem(
-                        navigator = navigator,
-                        drink = cocktail
+            when (resource) {
+                is Resource.Loading -> {
+                    CircularProgressIndicator(modifier = Modifier
+                        .size(50.dp)
+                        .align(Alignment.CenterHorizontally))
+                }
+                is Resource.Success -> {
+                    val drinks = (resource as Resource.Success<List<Drink>>).data
+                    if (drinks != null && drinks.isNotEmpty()) {
+                        LazyVerticalGrid(
+                            columns = GridCells.Fixed(count = 2),
+                            modifier = Modifier
+                                .fillMaxSize(),
+                        ) {
+                            items(drinks) { cocktail ->
+                                CockTailItem(
+                                    navigator = navigator,
+                                    drink = cocktail
+                                )
+                            }
+                        }
+                    } else {
+                        Text(
+                            text = "No drinks available",
+                            color = Color.Gray,
+                            modifier = Modifier
+                                .padding(16.dp)
+                                .align(Alignment.CenterHorizontally)
+                        )
+                    }
+                }
+                is Resource.Error -> {
+                    Text(
+                        text = "Error: ${(resource as Resource.Error).message}",
+                        color = Color.Red,
+                        modifier = Modifier
+                            .padding(16.dp)
+                            .align(Alignment.CenterHorizontally)
                     )
                 }
             }
