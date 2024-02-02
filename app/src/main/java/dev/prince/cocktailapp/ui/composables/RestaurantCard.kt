@@ -29,6 +29,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import dev.prince.cocktailapp.R
 import dev.prince.cocktailapp.ui.theme.LightGray
+import dev.prince.cocktailapp.ui.theme.LightOrange
+import dev.prince.cocktailapp.ui.theme.poppinsFamily
 
 @Composable
 fun RestaurantCard() {
@@ -38,23 +40,23 @@ fun RestaurantCard() {
             .fillMaxWidth()
             .background(Color.Unspecified)
             .height(110.dp),
-        shape = RoundedCornerShape(16.dp),
+        shape = RoundedCornerShape(12.dp),
         elevation = CardDefaults.cardElevation(
-            defaultElevation = 6.dp
+            defaultElevation = 4.dp
         )
     ) {
         Row {
 
             Image(
                 painter = painterResource(
-                    id = R.drawable.ic_launcher_background
+                    id = R.drawable.img_restaurant
                 ),
                 contentDescription = null,
                 modifier = Modifier
                     .fillMaxWidth(0.5f)
                     .background(LightGray)
-                    .padding(8.dp)
-                    .clip(RoundedCornerShape(16.dp)),
+                    .padding(top = 8.dp, bottom = 8.dp, start = 8.dp, end = 4.dp)
+                    .clip(RoundedCornerShape(12.dp)),
                 contentScale = ContentScale.Crop
             )
 
@@ -71,17 +73,19 @@ fun RestaurantCard() {
                     style = TextStyle(
                         fontSize = 18.sp,
                         fontWeight = FontWeight.Bold,
-                        color = Color.Black
+                        color = Color.Black,
+                        fontFamily = poppinsFamily
                     ),
-                    modifier = Modifier.padding(bottom = 4.dp)
+                    modifier = Modifier.padding(bottom = 2.dp)
                 )
 
                 Text(
                     text = "10:00 AM - 03:00 PM",
                     style = TextStyle(
-                        fontSize = 14.sp,
+                        fontSize = 12.sp,
                         fontWeight = FontWeight.Bold,
-                        color = Color.Black
+                        color = Color.Black,
+                        fontFamily = poppinsFamily
                     ),
                     modifier = Modifier.padding(bottom = 8.dp)
                 )
@@ -94,9 +98,10 @@ fun RestaurantCard() {
                     Text(
                         text = "Steve ST Road",
                         style = TextStyle(
-                            fontSize = 14.sp,
+                            fontSize = 12.sp,
                             fontWeight = FontWeight.SemiBold,
-                            color = Color.Red
+                            color = LightOrange,
+                            fontFamily = poppinsFamily
                         ),
                         modifier = Modifier.weight(1f)
                     )
@@ -108,9 +113,10 @@ fun RestaurantCard() {
                         Text(
                             text = "4.5",
                             style = TextStyle(
-                                fontSize = 14.sp,
+                                fontSize = 12.sp,
                                 fontWeight = FontWeight.SemiBold,
-                                color = Color.Black
+                                color = Color.Black,
+                                fontFamily = poppinsFamily
                             ),
                             modifier = Modifier.padding(end = 6.dp)
                         )
@@ -119,7 +125,7 @@ fun RestaurantCard() {
                             painter = painterResource(id = R.drawable.icon_star),
                             contentDescription = null,
                             tint = Color.Unspecified,
-                            modifier = Modifier.size(16.dp)
+                            modifier = Modifier.size(12.dp)
                         )
                     }
                 }

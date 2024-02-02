@@ -27,7 +27,7 @@ class HomeViewModel @Inject constructor(
     private val _drinks = MutableStateFlow<Resource<List<Drink>>>(Resource.Loading)
     val drinks: StateFlow<Resource<List<Drink>>> = _drinks
 
-    private val searchDebounceTime = 1000L
+    private val searchDebounceTime = 300L
     private val searchQueryChannel = Channel<String>()
 
     init {

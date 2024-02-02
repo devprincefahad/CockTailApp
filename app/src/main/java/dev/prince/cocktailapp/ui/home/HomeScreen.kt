@@ -1,5 +1,6 @@
 package dev.prince.cocktailapp.ui.home
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -23,7 +24,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -35,6 +35,9 @@ import dev.prince.cocktailapp.data.Drink
 import dev.prince.cocktailapp.ui.composables.CockTailItem
 import dev.prince.cocktailapp.ui.composables.RestaurantCard
 import dev.prince.cocktailapp.ui.composables.SearchBar
+import dev.prince.cocktailapp.ui.theme.LightOrange
+import dev.prince.cocktailapp.ui.theme.Pink40
+import dev.prince.cocktailapp.ui.theme.poppinsFamily
 import dev.prince.cocktailapp.util.Resource
 
 @Composable
@@ -46,7 +49,6 @@ fun HomeScreen(
 ) {
 
     val resource by viewModel.drinks.collectAsState(initial = Resource.Loading)
-
     var search by remember { mutableStateOf("") }
 
     Column(
@@ -61,8 +63,8 @@ fun HomeScreen(
             color = Color.Black,
             style = TextStyle(
                 fontSize = 32.sp,
-                fontFamily = FontFamily.SansSerif,
-                fontWeight = FontWeight.Bold
+                fontWeight = FontWeight.Bold,
+                fontFamily = poppinsFamily
             )
         )
 
@@ -85,7 +87,8 @@ fun HomeScreen(
                 text = "Near Restaurant",
                 style = TextStyle(
                     fontSize = 20.sp,
-                    fontWeight = FontWeight.Bold
+                    fontWeight = FontWeight.Bold,
+                    fontFamily = poppinsFamily
                 )
             )
 
@@ -93,7 +96,8 @@ fun HomeScreen(
                 text = "See All",
                 style = TextStyle(
                     fontSize = 14.sp,
-                    fontWeight = FontWeight.SemiBold
+                    fontWeight = FontWeight.SemiBold,
+                    fontFamily = poppinsFamily
                 )
             )
         }
@@ -103,8 +107,11 @@ fun HomeScreen(
         if (search.isNotBlank()) {
             when (resource) {
                 is Resource.Loading -> {
-                    CircularProgressIndicator(modifier = Modifier
-                        .size(50.dp)
+                    CircularProgressIndicator(
+                        color = LightOrange,
+                        modifier = Modifier
+                            .padding(top = 32.dp)
+                            .size(28.dp)
                         .align(Alignment.CenterHorizontally))
                 }
                 is Resource.Success -> {
@@ -113,7 +120,8 @@ fun HomeScreen(
                         LazyVerticalGrid(
                             columns = GridCells.Fixed(count = 2),
                             modifier = Modifier
-                                .fillMaxSize(),
+                                .fillMaxSize()
+                                .padding(top = 16.dp),
                         ) {
                             items(drinks) { cocktail ->
                                 CockTailItem(
@@ -125,21 +133,20 @@ fun HomeScreen(
                     } else {
                         Text(
                             text = "No drinks available",
-                            color = Color.Gray,
+                            color = LightOrange,
                             modifier = Modifier
-                                .padding(16.dp)
-                                .align(Alignment.CenterHorizontally)
+                                .padding(32.dp)
+                                .align(Alignment.CenterHorizontally),
+                            style = TextStyle(
+                                fontSize = 18.sp,
+                                fontWeight = FontWeight.SemiBold,
+                                fontFamily = poppinsFamily
+                            )
                         )
                     }
                 }
                 is Resource.Error -> {
-                    Text(
-                        text = "Error: ${(resource as Resource.Error).message}",
-                        color = Color.Red,
-                        modifier = Modifier
-                            .padding(16.dp)
-                            .align(Alignment.CenterHorizontally)
-                    )
+                    Log.d("error-home","Error: ${(resource as Resource.Error).message}")
                 }
             }
         }

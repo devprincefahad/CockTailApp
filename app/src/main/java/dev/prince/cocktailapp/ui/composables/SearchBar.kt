@@ -26,6 +26,7 @@ import androidx.compose.ui.unit.sp
 import dev.prince.cocktailapp.R
 import dev.prince.cocktailapp.ui.theme.DarkGray
 import dev.prince.cocktailapp.ui.theme.LightGray
+import dev.prince.cocktailapp.ui.theme.poppinsFamily
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
@@ -47,7 +48,8 @@ fun SearchBar(
         onValueChange = onValueChange,
         textStyle = TextStyle(
             fontSize = 14.sp,
-            fontWeight = FontWeight.Normal
+            fontWeight = FontWeight.Bold,
+            fontFamily = poppinsFamily
         ),
         leadingIcon = {
             Icon(
@@ -78,14 +80,12 @@ fun SearchBar(
                 text = "Search",
                 style = TextStyle(
                     fontSize = 14.sp,
-                    fontWeight = FontWeight.Bold
+                    fontWeight = FontWeight.Bold,
+                    fontFamily = poppinsFamily
                 )
             )
         }
     )
-    if (value.isEmpty()) {
-        focusManager.clearFocus()
-    }
 }
 
 

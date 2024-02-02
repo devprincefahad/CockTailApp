@@ -26,6 +26,8 @@ import dev.prince.cocktailapp.data.Drink
 import dev.prince.cocktailapp.ui.destinations.DetailScreenDestination
 import dev.prince.cocktailapp.ui.noRippleClickable
 import dev.prince.cocktailapp.ui.theme.DarkGray
+import dev.prince.cocktailapp.ui.theme.LightOrange
+import dev.prince.cocktailapp.ui.theme.poppinsFamily
 
 @Composable
 fun CockTailItem(
@@ -34,7 +36,7 @@ fun CockTailItem(
 ) {
 
     Column(
-        modifier = Modifier.padding(8.dp)
+        modifier = Modifier.padding(6.dp)
     ) {
 
         AsyncImage(
@@ -56,19 +58,20 @@ fun CockTailItem(
             style = TextStyle(
                 fontSize = 18.sp,
                 fontWeight = FontWeight.Bold,
-                color = Color.Black
+                color = Color.Black,
+                fontFamily = poppinsFamily
             )
         )
 
         Text(
             text = drink.categoryName,
             modifier = Modifier
-                .padding(top = 4.dp)
                 .fillMaxWidth(),
             style = TextStyle(
                 fontSize = 14.sp,
                 fontWeight = FontWeight.SemiBold,
-                color = DarkGray
+                color = DarkGray,
+                fontFamily = poppinsFamily
             )
         )
 
@@ -79,19 +82,20 @@ fun CockTailItem(
             Text(
                 text = drink.alcoholic,
                 modifier = Modifier
-                    .padding(top = 4.dp, end = 4.dp)
+                    .padding(end = 4.dp)
                     .weight(1f),
                 style = TextStyle(
                     fontSize = 12.sp,
                     fontWeight = FontWeight.SemiBold,
-                    color = Color.Red
+                    color = LightOrange,
+                    fontFamily = poppinsFamily
                 )
             )
 
             Text(
                 modifier = Modifier
                     .border(
-                        1.dp, Color.LightGray,
+                        1.dp, LightOrange,
                         shape = RoundedCornerShape(8.dp)
                     )
                     .padding(horizontal = 16.dp, vertical = 4.dp)
@@ -102,7 +106,8 @@ fun CockTailItem(
                 style = TextStyle(
                     fontSize = 12.sp,
                     fontWeight = FontWeight.SemiBold,
-                    color = Color.Black
+                    color = LightOrange,
+                    fontFamily = poppinsFamily
                 )
             )
         }
