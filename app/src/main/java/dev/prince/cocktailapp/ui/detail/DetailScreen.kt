@@ -62,8 +62,6 @@ fun DetailScreen(
         viewModel.getDrinkDetailsById(drinkId)
     }
 
-    Log.d("api-data", "response screen = $drinkDetails")
-
     Scaffold(
         topBar = {
             TopAppBar(

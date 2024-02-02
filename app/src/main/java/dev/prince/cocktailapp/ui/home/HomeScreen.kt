@@ -3,14 +3,17 @@ package dev.prince.cocktailapp.ui.home
 import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.GridItemSpan
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.rememberScrollState
@@ -54,99 +57,138 @@ fun HomeScreen(
     val resource by viewModel.drinks.collectAsState(initial = Resource.Loading)
     var search by remember { mutableStateOf("") }
 
-    Column(
+    LazyVerticalGrid(
+        columns = GridCells.Fixed(count = 2),
         modifier = Modifier
-            .background(Color.White)
+            .fillMaxSize()
             .padding(16.dp)
-            .verticalScroll(rememberScrollState())
     ) {
-
-        Text(
-            modifier = Modifier.padding(top = 16.dp),
-            text = "Let's eat \nQuality food",
-            color = Color.Black,
-            style = TextStyle(
-                fontSize = 32.sp,
-                fontWeight = FontWeight.Bold,
-                fontFamily = poppinsFamily
-            )
-        )
-
-        SearchBar(
-            value = search,
-            onValueChange = {
-                if (it.length <= 30) {
-                    search = it
-                    viewModel.searchDrinks(it)
-                }
-            }
-        )
-
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(top = 16.dp),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
+        item(
+            span = { GridItemSpan(2) }
         ) {
-            Text(
-                text = "Near Restaurant",
-                style = TextStyle(
-                    fontSize = 20.sp,
-                    fontWeight = FontWeight.Bold,
-                    fontFamily = poppinsFamily
+            Column(
+                modifier = Modifier
+                    .background(Color.White)
+            ) {
+                Text(
+                    modifier = Modifier.padding(top = 16.dp),
+                    text = "Let's eat \nQuality food",
+                    color = Color.Black,
+                    style = TextStyle(
+                        fontSize = 32.sp,
+                        fontWeight = FontWeight.Bold,
+                        fontFamily = poppinsFamily
+                    )
                 )
-            )
-
-            Text(
-                text = "See All",
-                style = TextStyle(
-                    fontSize = 14.sp,
-                    fontWeight = FontWeight.SemiBold,
-                    fontFamily = poppinsFamily
+                SearchBar(
+                    value = search,
+                    onValueChange = {
+                        if (it.length <= 30) {
+                            search = it
+                            viewModel.searchDrinks(it)
+                        }
+                    }
                 )
-            )
-        }
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(top = 16.dp),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text(
+                        text = "Near Restaurant",
+                        style = TextStyle(
+                            fontSize = 20.sp,
+                            fontWeight = FontWeight.Bold,
+                            fontFamily = poppinsFamily
+                        )
+                    )
 
-        RestaurantCard()
-
-        if (search.isNotBlank()) {
-            when (resource) {
-                is Resource.Loading -> {
-                    CircularProgressIndicator(
-                        color = LightOrange,
-                        modifier = Modifier
-                            .padding(top = 32.dp)
-                            .size(28.dp)
-                            .align(Alignment.CenterHorizontally)
+                    Text(
+                        text = "See All",
+                        style = TextStyle(
+                            fontSize = 14.sp,
+                            fontWeight = FontWeight.SemiBold,
+                            fontFamily = poppinsFamily
+                        )
                     )
                 }
 
-                is Resource.Success -> {
-                    val drinks = (resource as Resource.Success<List<Drink>>).data
-                    if (drinks != null && drinks.isNotEmpty()) {
-                        LazyVerticalGrid(
-                            columns = GridCells.Fixed(count = 2),
-                            modifier = Modifier
-                                .height(2800.dp)
-                                .fillMaxSize()
-                                .padding(top = 16.dp),
-                            userScrollEnabled = false
-                        ) {
-                            items(drinks) { cocktail ->
-                                CockTailItem(
-                                    navigator = navigator,
-                                    drink = cocktail
-                                )
-                            }
-                        }
-                    } else {
-                        Text(
-                            text = "No drinks available",
+                RestaurantCard()
+            }
+        }
+
+        if (search.isNotBlank()) when (resource) {
+            is Resource.Loading -> {
+                item(
+                    span = { GridItemSpan(2) }
+                ) {
+                    Box(
+                        modifier = Modifier.fillMaxWidth(),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        CircularProgressIndicator(
                             color = LightOrange,
                             modifier = Modifier
                                 .padding(32.dp)
-                                .align(Alignment.CenterHorizontally),
+                                .size(36.dp)
+                        )
+                    }
+                }
+            }
+
+            is Resource.Success -> {
+                val drinks = (resource as Resource.Success<List<Drink>>).data
+                if (!drinks.isNullOrEmpty()) {
+                    item(
+                        span = { GridItemSpan(2) }
+                    ) {
+                        Spacer(Modifier.height(16.dp))
+                    }
+                    items(drinks) { cocktail ->
+                        CockTailItem(
+                            navigator = navigator,
+                            drink = cocktail
+                        )
+                    }
+                } else {
+                    item(
+                        span = { GridItemSpan(2) }
+                    ) {
+                        Box(
+                            modifier = Modifier.fillMaxWidth(),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Text(
+                                text = "No drinks available",
+                                color = LightOrange,
+                                modifier = Modifier
+                                    .padding(32.dp),
+                                style = TextStyle(
+                                    fontSize = 18.sp,
+                                    fontWeight = FontWeight.SemiBold,
+                                    fontFamily = poppinsFamily
+                                )
+                            )
+                        }
+                    }
+                }
+            }
+
+            is Resource.Error -> {
+                item(
+                    span = { GridItemSpan(2) }
+                ) {
+                    Box(
+                        modifier = Modifier.fillMaxWidth(),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Text(
+                            text = "An error occurred!",
+                            color = LightOrange,
+                            modifier = Modifier
+                                .padding(32.dp),
                             style = TextStyle(
                                 fontSize = 18.sp,
                                 fontWeight = FontWeight.SemiBold,
@@ -154,10 +196,6 @@ fun HomeScreen(
                             )
                         )
                     }
-                }
-
-                is Resource.Error -> {
-                    Log.d("error-home", "Error: ${(resource as Resource.Error).message}")
                 }
             }
         }

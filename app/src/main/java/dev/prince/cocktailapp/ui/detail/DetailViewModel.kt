@@ -24,7 +24,6 @@ class DetailViewModel @Inject constructor(
             try {
                 val response = api.getDrinkById(id)
                 val detail = response.drinks.firstOrNull()
-                Log.d("api-data", "response screen = $detail")
                 _drinkDetails.emit(detail)
             } catch (e: Exception) {
                 e.printStackTrace()
