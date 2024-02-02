@@ -1,5 +1,6 @@
-package dev.prince.cocktailapp.ui.home
+package dev.prince.cocktailapp.ui.detail
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -11,21 +12,24 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class HomeViewModel @Inject constructor(
+class DetailViewModel @Inject constructor(
     private val api: ApiService
 ) : ViewModel() {
 
-    private val _drinks = MutableStateFlow<List<Drink>>(emptyList())
-    val drinks: StateFlow<List<Drink>> = _drinks
+    private val _drinkDetails = MutableStateFlow<Drink?>(null)
+    val drinkDetails: StateFlow<Drink?> = _drinkDetails
 
-    fun searchDrinks(cockTailName: String) {
+    fun getDrinkDetailsById(id: String) {
         viewModelScope.launch {
             try {
-                val response = api.getCocktailByName(cockTailName.trim())
-                _drinks.emit(response.drinks)
+                val response = api.getDrinkById(id)
+                val detail = response.drinks.firstOrNull()
+                Log.d("api-data", "response screen = $detail")
+                _drinkDetails.emit(detail)
             } catch (e: Exception) {
                 e.printStackTrace()
             }
         }
     }
+
 }
